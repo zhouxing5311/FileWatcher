@@ -1,0 +1,47 @@
+//
+//  PrefixHeader.pch
+//  FileWatcher
+//
+//  Created by 周兴 on 2022/7/21.
+//
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+
+#ifndef    weakifyObject
+    #if __has_feature(objc_arc)
+        #define weakifyObject(object)  \
+                ext_keywordify \
+                __weak __typeof__(object) weak##_##object = object;
+    #else
+        #define weakifyObject(object)  \
+                ext_keywordify  \
+                __block __typeof__(object) block##_##object = object;
+    #endif
+#endif
+
+#ifndef    strongifyObject
+    #if __has_feature(objc_arc)
+        #define strongifyObject(object)  \
+                ext_keywordify  \
+                __strong __typeof__(object) object = weak##_##object;
+    #else
+        #define strongifyObject(object) \
+                ext_keywordify  \
+                __strong __typeof__(object) object = block##_##object;
+    #endif
+#endif
+
+#undef FWWeak
+#define FWWeak(...) @weakifyObject(__VA_ARGS__)
+
+#undef FWStrong
+#define FWStrong(...) @strongifyObject(__VA_ARGS__)
+
+#if DEBUG
+#define ext_keywordify autoreleasepool {}
+#else
+#define ext_keywordify try {} @catch (...) {}
+#endif
+
+#endif /* PrefixHeader_pch */
