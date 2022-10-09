@@ -26,8 +26,8 @@
     //设置监控路径
     NSString *currentAppPath = [[NSBundle mainBundle] bundlePath];
     NSString *modulePath = [currentAppPath stringByReplacingOccurrencesOfString:@"FileWatcher.app" withString:@"Modules"];
-    //test
-//    NSString *modulePath = @"/Users/zhouxing/Desktop/code/practice/iOS/FileWatcher";
+//    //test
+//    NSString *modulePath = @"/Users/zhouxing/Desktop/code/boss/FileWatcher";
     if ([[NSFileManager defaultManager] fileExistsAtPath:modulePath]) {
         //开启python服务
 //        [self startServer];

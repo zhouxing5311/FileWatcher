@@ -6,6 +6,7 @@
 //
 
 #import "FileWatcherSocketManager.h"
+#import <Cocoa/Cocoa.h>
 #import "GCDAsyncSocket.h"
 
 @interface FileWatcherSocketManager ()<GCDAsyncSocketDelegate>
@@ -26,7 +27,6 @@
 
 - (instancetype)init {
     if (self = [super init]) {
-        
     }
     return self;
 }
@@ -40,10 +40,10 @@
         NSLog(@"TCP服务开启失败：%@", error);
     } else {
         NSLog(@"TCP服务开启成功");
-        //开启心跳 20秒检测一次
-        self.connectTimer = [NSTimer scheduledTimerWithTimeInterval:20.0 target:self selector:@selector(longConnectToSocket) userInfo:nil repeats:YES];
-         // 把定时器添加到当前运行循环,并且调为通用模式
-        [[NSRunLoop currentRunLoop] addTimer:self.connectTimer forMode:NSRunLoopCommonModes];
+        //开启心跳 20秒检测一次。暂时先不开启，防止debug时断点调试
+//        self.connectTimer = [NSTimer scheduledTimerWithTimeInterval:20.0 target:self selector:@selector(longConnectToSocket) userInfo:nil repeats:YES];
+//         // 把定时器添加到当前运行循环,并且调为通用模式
+//        [[NSRunLoop currentRunLoop] addTimer:self.connectTimer forMode:NSRunLoopCommonModes];
     }
 }
 
