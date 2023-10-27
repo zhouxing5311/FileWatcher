@@ -8,6 +8,10 @@
 #ifndef PrefixHeader_pch
 #define PrefixHeader_pch
 
+//字符串
+#define _S(str, ...) [NSString stringWithFormat:str, ##__VA_ARGS__]
+
+//弱引用
 #ifndef    weakifyObject
     #if __has_feature(objc_arc)
         #define weakifyObject(object)  \

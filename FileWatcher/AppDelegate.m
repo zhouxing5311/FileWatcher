@@ -9,6 +9,9 @@
 #import "FileWatcherManager.h"
 #import "FileWatcherSocketManager.h"
 #import "FileWatcherUtil.h"
+#import "PYSeverUtil.h"
+
+#define PYSeverPort 8000
 
 @interface AppDelegate ()
 
@@ -17,6 +20,7 @@
 
 @property (nonatomic, strong) NSStatusItem *statusItem;
 @property (nonatomic, strong) NSMenuItem *item2;
+@property (nonatomic, copy) NSString *modulePath;
 
 @end
 
@@ -25,17 +29,17 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     //设置监控路径
     NSString *currentAppPath = [[NSBundle mainBundle] bundlePath];
-    NSString *modulePath = [currentAppPath stringByReplacingOccurrencesOfString:@"FileWatcher.app" withString:@"Modules"];
+    self.modulePath = [currentAppPath stringByReplacingOccurrencesOfString:@"/FileWatcher.app" withString:@""];
 //    //test
-//    NSString *modulePath = @"/Users/zhouxing/Desktop/code/boss/FileWatcher";
-    if ([[NSFileManager defaultManager] fileExistsAtPath:modulePath]) {
+//    NSString *modulePath = @"/Users/zhouxing/Desktop/code/boss";
+    if ([[NSFileManager defaultManager] fileExistsAtPath:self.modulePath]) {
         //开启python服务
-//        [self startServer];
+        [self startServer:self.modulePath];
         //添加菜单
         [self addMenu];
     } else {
         //不在目录内
-        [self showConfirmAlert:@"请将程序放到bosshi根目录" confirmTitle:@"关闭" msg:@"" complete:^(BOOL isConfirm) {
+        [self showConfirmAlert:@"目录不合法" confirmTitle:@"关闭" msg:@"" complete:^(BOOL isConfirm) {
             [[NSApplication sharedApplication] terminate:self];
         }];
         return;
@@ -58,7 +62,7 @@
     
     //开始监控文件
     self.watcherManager = [[FileWatcherManager alloc] init];
-    [self.watcherManager startWatchWithFilePaths:@[modulePath] modifyBlock:^(NSString * _Nonnull fileName) {
+    [self.watcherManager startWatchWithFilePaths:@[self.modulePath] modifyBlock:^(NSString * _Nonnull fileName) {
         FWStrong(self)
         NSLog(@"改变了文件：%@", fileName);
         //进行文件类型过滤
@@ -67,14 +71,11 @@
     }];
 }
 
-- (void)startServer {
-    NSString *startServerShellPath = [[NSBundle mainBundle] pathForResource:@"start_server" ofType:@"sh"];
-    SEResult *result = [FileWatcherUtil runWithCmd:@"/bin/sh %@", startServerShellPath];
-    if (result && result.err == errAuthorizationSuccess) {
-        NSLog(@"开启python服务成功");
-    } else {
-        NSLog(@"开启失败：%@", result.outputStr);
-    }
+- (void)startServer:(NSString *)path {
+    [PYSeverUtil closeSever:PYSeverPort];
+    [PYSeverUtil startSever:PYSeverPort path:path];
+    
+    NSLog(@"开启py完毕");
 }
 
 //展示弹窗
@@ -116,7 +117,7 @@
     NSMenu *menu = [[NSMenu alloc] init];
     
     NSMenuItem *item1 = [NSMenuItem new];
-    item1.title = @"正在监控Modules";
+    item1.title = _S(@"正在监控%@", [self.modulePath lastPathComponent]);
     [menu addItem:item1];
     
     NSMenuItem *item2 = [NSMenuItem new];
@@ -136,7 +137,9 @@
 }
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification {
-    // Insert code here to tear down your application
+    [PYSeverUtil closeSever:PYSeverPort];
+    
+    NSLog(@"程序退出了");
 }
 
 

@@ -8,10 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		93A72ECB3AD9D9E1B270B418 /* libPods-FileWatcher.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B79D9A3E5BA2733B868209C /* libPods-FileWatcher.a */; };
-		D914885D288A515A00016833 /* start_server.sh in Resources */ = {isa = PBXBuildFile; fileRef = D914885C288A515A00016833 /* start_server.sh */; };
 		D9148860288A525C00016833 /* FileWatcherUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = D914885F288A525C00016833 /* FileWatcherUtil.m */; };
-		D9148866288A52A200016833 /* SEResult.m in Sources */ = {isa = PBXBuildFile; fileRef = D9148863288A52A200016833 /* SEResult.m */; };
-		D9148867288A52A200016833 /* STPrivilegedTask.m in Sources */ = {isa = PBXBuildFile; fileRef = D9148865288A52A200016833 /* STPrivilegedTask.m */; };
+		D91E76A42AEBB3AB00FA7491 /* SEResult.m in Sources */ = {isa = PBXBuildFile; fileRef = D91E76A12AEBB3AB00FA7491 /* SEResult.m */; };
+		D91E76A52AEBB3AB00FA7491 /* STPrivilegedTask.m in Sources */ = {isa = PBXBuildFile; fileRef = D91E76A32AEBB3AB00FA7491 /* STPrivilegedTask.m */; };
+		D91E76A82AEBB3D800FA7491 /* PYSeverUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = D91E76A72AEBB3D800FA7491 /* PYSeverUtil.m */; };
 		D99470C72887CF820054F7AF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D99470C62887CF820054F7AF /* AppDelegate.m */; };
 		D99470CC2887CF860054F7AF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D99470CB2887CF860054F7AF /* Assets.xcassets */; };
 		D99470CF2887CF860054F7AF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D99470CD2887CF860054F7AF /* Main.storyboard */; };
@@ -25,13 +25,14 @@
 		1B79D9A3E5BA2733B868209C /* libPods-FileWatcher.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FileWatcher.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9BFE078CA240987738BA7A62 /* Pods-FileWatcher.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FileWatcher.debug.xcconfig"; path = "Target Support Files/Pods-FileWatcher/Pods-FileWatcher.debug.xcconfig"; sourceTree = "<group>"; };
 		D91488472889284F00016833 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
-		D914885C288A515A00016833 /* start_server.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = start_server.sh; sourceTree = "<group>"; };
 		D914885E288A525C00016833 /* FileWatcherUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileWatcherUtil.h; sourceTree = "<group>"; };
 		D914885F288A525C00016833 /* FileWatcherUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileWatcherUtil.m; sourceTree = "<group>"; };
-		D9148862288A52A100016833 /* STPrivilegedTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPrivilegedTask.h; sourceTree = "<group>"; };
-		D9148863288A52A200016833 /* SEResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SEResult.m; sourceTree = "<group>"; };
-		D9148864288A52A200016833 /* SEResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SEResult.h; sourceTree = "<group>"; };
-		D9148865288A52A200016833 /* STPrivilegedTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPrivilegedTask.m; sourceTree = "<group>"; };
+		D91E76A02AEBB3AB00FA7491 /* STPrivilegedTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPrivilegedTask.h; sourceTree = "<group>"; };
+		D91E76A12AEBB3AB00FA7491 /* SEResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SEResult.m; sourceTree = "<group>"; };
+		D91E76A22AEBB3AB00FA7491 /* SEResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SEResult.h; sourceTree = "<group>"; };
+		D91E76A32AEBB3AB00FA7491 /* STPrivilegedTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPrivilegedTask.m; sourceTree = "<group>"; };
+		D91E76A62AEBB3D800FA7491 /* PYSeverUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PYSeverUtil.h; sourceTree = "<group>"; };
+		D91E76A72AEBB3D800FA7491 /* PYSeverUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PYSeverUtil.m; sourceTree = "<group>"; };
 		D99470C22887CF820054F7AF /* FileWatcher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FileWatcher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D99470C52887CF820054F7AF /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		D99470C62887CF820054F7AF /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -75,13 +76,23 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
-		D9148861288A52A100016833 /* PrivilegeTool */ = {
+		D91E769E2AEBB3AB00FA7491 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				D9148864288A52A200016833 /* SEResult.h */,
-				D9148863288A52A200016833 /* SEResult.m */,
-				D9148862288A52A100016833 /* STPrivilegedTask.h */,
-				D9148865288A52A200016833 /* STPrivilegedTask.m */,
+				D91E769F2AEBB3AB00FA7491 /* PrivilegeTool */,
+				D91E76A62AEBB3D800FA7491 /* PYSeverUtil.h */,
+				D91E76A72AEBB3D800FA7491 /* PYSeverUtil.m */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		D91E769F2AEBB3AB00FA7491 /* PrivilegeTool */ = {
+			isa = PBXGroup;
+			children = (
+				D91E76A22AEBB3AB00FA7491 /* SEResult.h */,
+				D91E76A12AEBB3AB00FA7491 /* SEResult.m */,
+				D91E76A02AEBB3AB00FA7491 /* STPrivilegedTask.h */,
+				D91E76A32AEBB3AB00FA7491 /* STPrivilegedTask.m */,
 			);
 			path = PrivilegeTool;
 			sourceTree = "<group>";
@@ -107,7 +118,7 @@
 		D99470C42887CF820054F7AF /* FileWatcher */ = {
 			isa = PBXGroup;
 			children = (
-				D9148861288A52A100016833 /* PrivilegeTool */,
+				D91E769E2AEBB3AB00FA7491 /* Utils */,
 				D99470DF2887EBA80054F7AF /* Info.plist */,
 				D99470C52887CF820054F7AF /* AppDelegate.h */,
 				D99470C62887CF820054F7AF /* AppDelegate.m */,
@@ -122,7 +133,6 @@
 				D99470D02887CF860054F7AF /* main.m */,
 				D99470D22887CF860054F7AF /* FileWatcher.entitlements */,
 				D91488472889284F00016833 /* PrefixHeader.pch */,
-				D914885C288A515A00016833 /* start_server.sh */,
 			);
 			path = FileWatcher;
 			sourceTree = "<group>";
@@ -186,7 +196,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D99470CC2887CF860054F7AF /* Assets.xcassets in Resources */,
-				D914885D288A515A00016833 /* start_server.sh in Resources */,
 				D99470CF2887CF860054F7AF /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -227,9 +236,10 @@
 				D99470D12887CF860054F7AF /* main.m in Sources */,
 				D99470C72887CF820054F7AF /* AppDelegate.m in Sources */,
 				D9148860288A525C00016833 /* FileWatcherUtil.m in Sources */,
-				D9148866288A52A200016833 /* SEResult.m in Sources */,
-				D9148867288A52A200016833 /* STPrivilegedTask.m in Sources */,
+				D91E76A82AEBB3D800FA7491 /* PYSeverUtil.m in Sources */,
+				D91E76A42AEBB3AB00FA7491 /* SEResult.m in Sources */,
 				D99470E9288805C50054F7AF /* FileWatcherSocketManager.m in Sources */,
+				D91E76A52AEBB3AB00FA7491 /* STPrivilegedTask.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -371,6 +381,7 @@
 				GCC_PREFIX_HEADER = "$(SRCROOT)/FileWatcher/PrefixHeader.pch";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = FileWatcher/Info.plist;
+				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainStoryboardFile = Main;
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
@@ -401,6 +412,7 @@
 				GCC_PREFIX_HEADER = "$(SRCROOT)/FileWatcher/PrefixHeader.pch";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = FileWatcher/Info.plist;
+				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainStoryboardFile = Main;
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
