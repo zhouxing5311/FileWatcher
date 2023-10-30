@@ -10,6 +10,7 @@
 #import "FileWatcherSocketManager.h"
 #import "FileWatcherUtil.h"
 #import "PYSeverUtil.h"
+#import "KZServerManager.h"
 
 #define PYSeverPort 8000
 
@@ -19,7 +20,7 @@
 @property (nonatomic, strong) FileWatcherManager *watcherManager;
 
 @property (nonatomic, strong) NSStatusItem *statusItem;
-@property (nonatomic, strong) NSMenuItem *item2;
+@property (nonatomic, strong) NSMenuItem *connectItem;
 @property (nonatomic, copy) NSString *modulePath;
 
 @end
@@ -35,8 +36,6 @@
     if ([[NSFileManager defaultManager] fileExistsAtPath:self.modulePath]) {
         //开启python服务
         [self startServer:self.modulePath];
-        //添加菜单
-        [self addMenu];
     } else {
         //不在目录内
         [self showConfirmAlert:@"目录不合法" confirmTitle:@"关闭" msg:@"" complete:^(BOOL isConfirm) {
@@ -56,7 +55,7 @@
             item.title = obj;
             [connectorMenu addItem:item];
         }];
-        self.item2.submenu = connectorMenu;
+        self.connectItem.submenu = connectorMenu;
     };
     [self.socketManager startTcpServer];
     
@@ -72,10 +71,17 @@
 }
 
 - (void)startServer:(NSString *)path {
-    [PYSeverUtil closeSever:PYSeverPort];
-    [PYSeverUtil startSever:PYSeverPort path:path];
+//    [PYSeverUtil closeSever:PYSeverPort];
+//    [PYSeverUtil startSever:PYSeverPort path:path];
     
-    NSLog(@"开启py完毕");
+    if ([KZServerManager shareServerManager].isRunning) {
+        [[KZServerManager shareServerManager] stopServer];
+        [self addMenu:NO];
+    } else {
+        [[KZServerManager shareServerManager] customPort:PYSeverPort];
+        NSError *error = [[KZServerManager shareServerManager] startServer];
+        [self addMenu:error == nil];
+    }
 }
 
 //展示弹窗
@@ -105,7 +111,7 @@
     }
 }
 
-- (void)addMenu {
+- (void)addMenu:(BOOL)serverOK {
     //初始化statusItem
     self.statusItem = [[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength];
     
@@ -116,20 +122,39 @@
     
     NSMenu *menu = [[NSMenu alloc] init];
     
-    NSMenuItem *item1 = [NSMenuItem new];
-    item1.title = _S(@"正在监控%@", [self.modulePath lastPathComponent]);
-    [menu addItem:item1];
+    //监控状态
+    NSMenuItem *watcherItem = [NSMenuItem new];
+    watcherItem.title = _S(@"正在监控%@", [self.modulePath lastPathComponent]);
+    [menu addItem:watcherItem];
     
-    NSMenuItem *item2 = [NSMenuItem new];
-    item2.title = @"已连接";
-    item2.submenu = [NSMenu new];
-    [menu addItem:item2];
-    self.item2 = item2;
+    //服务状态
+    if (serverOK) {
+        NSMenuItem *serverItem = [[NSMenuItem alloc] initWithTitle:@"服务开启中" action:@selector(serverAction) keyEquivalent:@""];
+        [menu addItem:serverItem];
+    } else {
+        NSMenuItem *failedItem = [NSMenuItem new];
+        failedItem.title = @"服务开启失败";
+        [menu addItem:failedItem];
+    }
     
-    NSMenuItem *item3 = [[NSMenuItem alloc] initWithTitle:@"退出" action:@selector(quitAction) keyEquivalent:@""];
-    [menu addItem:item3];
+    //链接状态
+    NSMenuItem *connectItem = [NSMenuItem new];
+    connectItem.title = @"已连接";
+    connectItem.submenu = [NSMenu new];
+    [menu addItem:connectItem];
+    self.connectItem = connectItem;
+    
+    //退出
+    NSMenuItem *quitItem = [[NSMenuItem alloc] initWithTitle:@"退出" action:@selector(quitAction) keyEquivalent:@""];
+    [menu addItem:quitItem];
     
     self.statusItem.menu = menu;
+}
+
+- (void)serverAction {
+    NSWorkspace *workspace = [NSWorkspace sharedWorkspace];
+    NSURL *url = [NSURL URLWithString:_S(@"http://localhost:%d", PYSeverPort)];
+    [workspace openURL:url];
 }
 
 - (void)quitAction {

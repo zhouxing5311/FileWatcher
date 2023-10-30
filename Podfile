@@ -1,3 +1,5 @@
+platform :osx, '11.0'
+
 workspace "FileWatcher"
 
 #pod 'SocketRocket', '0.6.0'
