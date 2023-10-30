@@ -56,6 +56,7 @@
             [connectorMenu addItem:item];
         }];
         self.connectItem.submenu = connectorMenu;
+        [self updateStatusBarWithIsConnected:connectors.count > 0];
     };
     [self.socketManager startTcpServer];
     
@@ -115,10 +116,8 @@
     //初始化statusItem
     self.statusItem = [[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength];
     
-    NSStatusBarButton *button = self.statusItem.button;
-    NSImage *buttonImage = [NSImage imageNamed:@"menu_icon"];
-    [buttonImage setSize:NSMakeSize(18, 18)];
-    button.image = buttonImage;
+    //修改状态栏图标
+    [self updateStatusBarWithIsConnected:NO];
     
     NSMenu *menu = [[NSMenu alloc] init];
     
@@ -149,6 +148,14 @@
     [menu addItem:quitItem];
     
     self.statusItem.menu = menu;
+}
+
+- (void)updateStatusBarWithIsConnected:(BOOL)connected {
+    NSStatusBarButton *button = self.statusItem.button;
+    NSString *imageName = connected ? @"menu_icon_orange" : @"menu_icon_blue";
+    NSImage *buttonImage = [NSImage imageNamed:imageName];
+    [buttonImage setSize:NSMakeSize(18, 18)];
+    button.image = buttonImage;
 }
 
 - (void)serverAction {
