@@ -24,7 +24,8 @@
 @property (nonatomic, strong) NSMenuItem *xmlItem;//xml资源数量
 
 @property (nonatomic, copy) NSString *modulePath;
-@property (nonatomic, strong) NSArray *xmlPaths;
+@property (nonatomic, strong) NSArray *xmlPaths;//xml资源
+@property (nonatomic, strong) NSArray *connectors;//socket连接者
 
 @end
 
@@ -84,6 +85,7 @@
             [connectorMenu addItem:item];
         }];
         self.connectItem.submenu = connectorMenu;
+        self.connectors = connectors;
         [self updateStatusBarWithIsConnected:connectors.count > 0];
     };
     [self.socketManager startTcpServer];
@@ -98,6 +100,7 @@
         NSLog(@"改变了文件：%@", fileName);
         //进行文件类型过滤
         [self.socketManager sendStringToClient:fileName];
+        [self updateStatusBarFileChanged];
     }];
 }
 
@@ -144,12 +147,27 @@
     self.statusItem.menu = menu;
 }
 
+//刷新socket连接状态
 - (void)updateStatusBarWithIsConnected:(BOOL)connected {
     NSStatusBarButton *button = self.statusItem.button;
     NSString *imageName = connected ? @"menu_icon_orange" : @"menu_icon_blue";
     NSImage *buttonImage = [NSImage imageNamed:imageName];
     [buttonImage setSize:NSMakeSize(18, 18)];
     button.image = buttonImage;
+}
+
+//监听文件变更通知
+- (void)updateStatusBarFileChanged {
+    //变为绿色图标
+    NSStatusBarButton *button = self.statusItem.button;
+    NSImage *buttonImage = [NSImage imageNamed:@"menu_icon_green"];
+    [buttonImage setSize:NSMakeSize(18, 18)];
+    button.image = buttonImage;
+    
+    //1秒后变回原来状态
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self updateStatusBarWithIsConnected:self.connectors.count > 0];
+    });
 }
 
 - (void)serverAction {
