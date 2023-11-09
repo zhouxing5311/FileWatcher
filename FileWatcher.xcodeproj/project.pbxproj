@@ -11,7 +11,6 @@
 		D9148860288A525C00016833 /* FileWatcherUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = D914885F288A525C00016833 /* FileWatcherUtil.m */; };
 		D91E76A42AEBB3AB00FA7491 /* SEResult.m in Sources */ = {isa = PBXBuildFile; fileRef = D91E76A12AEBB3AB00FA7491 /* SEResult.m */; };
 		D91E76A52AEBB3AB00FA7491 /* STPrivilegedTask.m in Sources */ = {isa = PBXBuildFile; fileRef = D91E76A32AEBB3AB00FA7491 /* STPrivilegedTask.m */; };
-		D91E76A82AEBB3D800FA7491 /* PYSeverUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = D91E76A72AEBB3D800FA7491 /* PYSeverUtil.m */; };
 		D91E76DA2AEF498900FA7491 /* KZHTTPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = D91E76AD2AEF498900FA7491 /* KZHTTPConnection.m */; };
 		D91E76DB2AEF498900FA7491 /* HTTPErrorResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = D91E76B52AEF498900FA7491 /* HTTPErrorResponse.m */; };
 		D91E76DC2AEF498900FA7491 /* HTTPDataResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = D91E76B62AEF498900FA7491 /* HTTPDataResponse.m */; };
@@ -33,6 +32,7 @@
 		D91E76EC2AEF498900FA7491 /* KZHTTPDataResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = D91E76D62AEF498900FA7491 /* KZHTTPDataResponse.m */; };
 		D91E76ED2AEF498900FA7491 /* KZServerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D91E76D82AEF498900FA7491 /* KZServerManager.m */; };
 		D91E76EF2AEF542500FA7491 /* fw_home.html in Resources */ = {isa = PBXBuildFile; fileRef = D91E76EE2AEF542500FA7491 /* fw_home.html */; };
+		D98D93E42AFCC8B1005D65F6 /* FWAlertUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = D98D93E32AFCC8B1005D65F6 /* FWAlertUtils.m */; };
 		D99470C72887CF820054F7AF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D99470C62887CF820054F7AF /* AppDelegate.m */; };
 		D99470CC2887CF860054F7AF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D99470CB2887CF860054F7AF /* Assets.xcassets */; };
 		D99470CF2887CF860054F7AF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D99470CD2887CF860054F7AF /* Main.storyboard */; };
@@ -52,8 +52,6 @@
 		D91E76A12AEBB3AB00FA7491 /* SEResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SEResult.m; sourceTree = "<group>"; };
 		D91E76A22AEBB3AB00FA7491 /* SEResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SEResult.h; sourceTree = "<group>"; };
 		D91E76A32AEBB3AB00FA7491 /* STPrivilegedTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPrivilegedTask.m; sourceTree = "<group>"; };
-		D91E76A62AEBB3D800FA7491 /* PYSeverUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PYSeverUtil.h; sourceTree = "<group>"; };
-		D91E76A72AEBB3D800FA7491 /* PYSeverUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PYSeverUtil.m; sourceTree = "<group>"; };
 		D91E76AD2AEF498900FA7491 /* KZHTTPConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KZHTTPConnection.m; sourceTree = "<group>"; };
 		D91E76AF2AEF498900FA7491 /* HTTPConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTPConnection.h; sourceTree = "<group>"; };
 		D91E76B02AEF498900FA7491 /* HTTPMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTPMessage.h; sourceTree = "<group>"; };
@@ -96,6 +94,8 @@
 		D91E76D82AEF498900FA7491 /* KZServerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KZServerManager.m; sourceTree = "<group>"; };
 		D91E76D92AEF498900FA7491 /* KZHTTPDataResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KZHTTPDataResponse.h; sourceTree = "<group>"; };
 		D91E76EE2AEF542500FA7491 /* fw_home.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = fw_home.html; sourceTree = "<group>"; };
+		D98D93E22AFCC8B1005D65F6 /* FWAlertUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FWAlertUtils.h; sourceTree = "<group>"; };
+		D98D93E32AFCC8B1005D65F6 /* FWAlertUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWAlertUtils.m; sourceTree = "<group>"; };
 		D99470C22887CF820054F7AF /* FileWatcher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FileWatcher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D99470C52887CF820054F7AF /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		D99470C62887CF820054F7AF /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -144,8 +144,8 @@
 			children = (
 				D91E76AC2AEF498900FA7491 /* KZHTTPServer */,
 				D91E769F2AEBB3AB00FA7491 /* PrivilegeTool */,
-				D91E76A62AEBB3D800FA7491 /* PYSeverUtil.h */,
-				D91E76A72AEBB3D800FA7491 /* PYSeverUtil.m */,
+				D98D93E22AFCC8B1005D65F6 /* FWAlertUtils.h */,
+				D98D93E32AFCC8B1005D65F6 /* FWAlertUtils.m */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -389,9 +389,9 @@
 				D91E76EB2AEF498900FA7491 /* HTTPServer.m in Sources */,
 				D91E76E62AEF498900FA7491 /* MultipartMessageHeader.m in Sources */,
 				D9148860288A525C00016833 /* FileWatcherUtil.m in Sources */,
+				D98D93E42AFCC8B1005D65F6 /* FWAlertUtils.m in Sources */,
 				D91E76EC2AEF498900FA7491 /* KZHTTPDataResponse.m in Sources */,
 				D91E76E82AEF498900FA7491 /* DDNumber.m in Sources */,
-				D91E76A82AEBB3D800FA7491 /* PYSeverUtil.m in Sources */,
 				D91E76DE2AEF498900FA7491 /* HTTPFileResponse.m in Sources */,
 				D91E76E52AEF498900FA7491 /* MultipartFormDataParser.m in Sources */,
 				D91E76E02AEF498900FA7491 /* HTTPRedirectResponse.m in Sources */,

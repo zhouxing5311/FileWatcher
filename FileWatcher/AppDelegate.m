@@ -9,8 +9,8 @@
 #import "FileWatcherManager.h"
 #import "FileWatcherSocketManager.h"
 #import "FileWatcherUtil.h"
-#import "PYSeverUtil.h"
 #import "KZServerManager.h"
+#import "FWAlertUtils.h"
 
 #define PYSeverPort 8000
 
@@ -28,22 +28,35 @@
 @implementation AppDelegate
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-    //设置监控路径
+    //当前路径
     NSString *currentAppPath = [[NSBundle mainBundle] bundlePath];
-    self.modulePath = [currentAppPath stringByReplacingOccurrencesOfString:@"/FileWatcher.app" withString:@""];
-//    //test
-//    NSString *modulePath = @"/Users/zhouxing/Desktop/code/boss";
-    if ([[NSFileManager defaultManager] fileExistsAtPath:self.modulePath]) {
-        //开启python服务
-        [self startServer:self.modulePath];
-    } else {
-        //不在目录内
-        [self showConfirmAlert:@"目录不合法" confirmTitle:@"关闭" msg:@"" complete:^(BOOL isConfirm) {
-            [[NSApplication sharedApplication] terminate:self];
-        }];
-        return;
-    }
+    self.modulePath = [currentAppPath stringByDeletingLastPathComponent];
     
+    //开启文件服务
+    [self setupFileServer];
+    
+    //设置长连接
+    [self setupSocketManager];
+    
+    //开始监控文件
+    [self setupFileWatcher];
+}
+
+#pragma mark - Setup
+//开启文件服务
+- (void)setupFileServer {
+    if ([KZServerManager shareServerManager].isRunning) {
+        [[KZServerManager shareServerManager] stopServer];
+        [self addMenu:NO];
+    } else {
+        [[KZServerManager shareServerManager] customPort:PYSeverPort];
+        NSError *error = [[KZServerManager shareServerManager] startServer];
+        [self addMenu:error == nil];
+    }
+}
+
+//设置长连接
+- (void)setupSocketManager {
     //开启server
     self.socketManager = [[FileWatcherSocketManager alloc] init];
     FWWeak(self)
@@ -59,59 +72,22 @@
         [self updateStatusBarWithIsConnected:connectors.count > 0];
     };
     [self.socketManager startTcpServer];
-    
-    //开始监控文件
+}
+
+//开始监控文件
+- (void)setupFileWatcher {
     self.watcherManager = [[FileWatcherManager alloc] init];
+    FWWeak(self)
     [self.watcherManager startWatchWithFilePaths:@[self.modulePath] modifyBlock:^(NSString * _Nonnull fileName) {
         FWStrong(self)
         NSLog(@"改变了文件：%@", fileName);
         //进行文件类型过滤
         [self.socketManager sendStringToClient:fileName];
-//        [self showAlertWithTitle:[NSString stringWithFormat:@"文件改变：%@", fileName]];
     }];
 }
 
-- (void)startServer:(NSString *)path {
-//    [PYSeverUtil closeSever:PYSeverPort];
-//    [PYSeverUtil startSever:PYSeverPort path:path];
-    
-    if ([KZServerManager shareServerManager].isRunning) {
-        [[KZServerManager shareServerManager] stopServer];
-        [self addMenu:NO];
-    } else {
-        [[KZServerManager shareServerManager] customPort:PYSeverPort];
-        NSError *error = [[KZServerManager shareServerManager] startServer];
-        [self addMenu:error == nil];
-    }
-}
-
-//展示弹窗
-- (void)showAlertWithTitle:(NSString *)title {
-    NSAlert *alert = [[NSAlert alloc] init];
-    [alert addButtonWithTitle:@"OK"];
-    [alert setMessageText:title];
-//    [alert setInformativeText:msg.length ? msg : @""];
-    [alert setAlertStyle:NSAlertStyleInformational];
-    [alert runModal];
-}
-
-//展示确认弹窗
-- (void)showConfirmAlert:(NSString *_Nullable)title
-            confirmTitle:(NSString *)confirmTitle
-                     msg:(NSString *_Nullable)msg
-                complete:(void(^)(BOOL isConfirm))complete {
-    NSAlert *alert = [[NSAlert alloc] init];
-    [alert addButtonWithTitle:confirmTitle];
-//    [alert addButtonWithTitle:@"取消"];
-    [alert setMessageText:title];
-    [alert setInformativeText:msg.length ? msg : @""];
-    [alert setAlertStyle:NSAlertStyleInformational];
-    NSModalResponse response = [alert runModal];
-    if (response == 1000) {
-        !complete ?: complete(YES);
-    }
-}
-
+#pragma mark - Methods
+//添加菜单
 - (void)addMenu:(BOOL)serverOK {
     //初始化statusItem
     self.statusItem = [[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength];
@@ -168,12 +144,11 @@
     [[NSApplication sharedApplication] terminate:self];
 }
 
+
+#pragma mark - NSApplicationDelegate
 - (void)applicationWillTerminate:(NSNotification *)aNotification {
-    [PYSeverUtil closeSever:PYSeverPort];
-    
     NSLog(@"程序退出了");
 }
-
 
 - (BOOL)applicationSupportsSecureRestorableState:(NSApplication *)app {
     return YES;
