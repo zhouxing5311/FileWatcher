@@ -20,8 +20,11 @@
 @property (nonatomic, strong) FileWatcherManager *watcherManager;
 
 @property (nonatomic, strong) NSStatusItem *statusItem;
-@property (nonatomic, strong) NSMenuItem *connectItem;
+@property (nonatomic, strong) NSMenuItem *connectItem;//连接状态
+@property (nonatomic, strong) NSMenuItem *xmlItem;//xml资源数量
+
 @property (nonatomic, copy) NSString *modulePath;
+@property (nonatomic, strong) NSArray *xmlPaths;
 
 @end
 
@@ -31,6 +34,7 @@
     //当前路径
     NSString *currentAppPath = [[NSBundle mainBundle] bundlePath];
     self.modulePath = [currentAppPath stringByDeletingLastPathComponent];
+//    self.modulePath = @"/Users/zhouxing/Desktop/code/boss/bosshi";
     
     //开启文件服务
     [self setupFileServer];
@@ -40,6 +44,17 @@
     
     //开始监控文件
     [self setupFileWatcher];
+    
+    //获取目录下xml资源
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        //测试
+        CFAbsoluteTime startTime = CFAbsoluteTimeGetCurrent();
+        self.xmlPaths = [self getAllXMLFilePathInDirectory:self.modulePath];
+        [[NSUserDefaults standardUserDefaults] setObject:self.xmlPaths forKey:kXmlResourceKey];
+        CFAbsoluteTime endTime = CFAbsoluteTimeGetCurrent();
+        NSLog(@"查找xml完毕，个数：%ld，耗时：%.2f", self.xmlPaths.count, (endTime - startTime) * 1000);
+        self.xmlItem.title = _S(@"xml数量%ld", self.xmlPaths.count);
+    });
 }
 
 #pragma mark - Setup
@@ -102,6 +117,9 @@
     watcherItem.title = _S(@"正在监控%@", [self.modulePath lastPathComponent]);
     [menu addItem:watcherItem];
     
+    //xml资源数量
+    [menu addItem:self.xmlItem];
+    
     //服务状态
     if (serverOK) {
         NSMenuItem *serverItem = [[NSMenuItem alloc] initWithTitle:@"服务开启中" action:@selector(serverAction) keyEquivalent:@""];
@@ -144,6 +162,38 @@
     [[NSApplication sharedApplication] terminate:self];
 }
 
+- (NSArray<NSString *> *)getAllXMLFilePathInDirectory:(NSString *)directoryPath {
+    NSMutableArray<NSString *> *xmlFilePaths = [[NSMutableArray alloc] init];
+    
+    // 遍历指定目录下的所有文件和子目录
+    NSArray<NSString *> *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:directoryPath error:nil];
+    
+    for (NSString *content in contents) {
+        NSString *filePath = [directoryPath stringByAppendingPathComponent:content];
+        
+        // 检查文件是否为 XML 文件
+        if ([[NSFileManager defaultManager] isReadableFileAtPath:filePath]) {
+            if ([content.pathExtension isEqualToString:@"xml"]) {
+                NSString *removedPath = [filePath stringByReplacingCharactersInRange:NSMakeRange(0, self.modulePath.length + 1) withString:@""];
+                [xmlFilePaths addObject:removedPath];
+            }
+        }
+        // 检查子目录是否包含 XML 文件
+        if ([[NSFileManager defaultManager] fileExistsAtPath:filePath isDirectory:nil]) {
+            [xmlFilePaths addObjectsFromArray:[self getAllXMLFilePathInDirectory:filePath]];
+        }
+    }
+    return xmlFilePaths;
+}
+
+#pragma mark - Get
+- (NSMenuItem *)xmlItem {
+    if (!_xmlItem) {
+        _xmlItem = [NSMenuItem new];
+        _xmlItem.title = @"xml数量0";
+    }
+    return _xmlItem;
+}
 
 #pragma mark - NSApplicationDelegate
 - (void)applicationWillTerminate:(NSNotification *)aNotification {

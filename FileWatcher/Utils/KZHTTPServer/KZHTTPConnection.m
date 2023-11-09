@@ -13,6 +13,7 @@
 
 #define kFormat(path)   [NSString stringWithFormat:@"/%@",path]
 #define kPlaceHolder    @"$##$"
+#define kXmlResource    @"/xmlResource"
 
 @implementation KZHTTPConnection
 
@@ -45,7 +46,20 @@
 
 - (NSObject<HTTPResponse> *)httpResponseForMethod:(NSString *)method URI:(NSString *)path
 {
-    return [self localResponseWithPath:path method:method];
+    if ([path isEqualToString:@"/xmlResource"]) {
+        //获取xml资源
+        NSArray<NSString *> *xmlPaths = [[NSUserDefaults standardUserDefaults] objectForKey:kXmlResourceKey];
+        NSMutableString *xmlResourceString = @"".mutableCopy;
+        for (NSString *path in xmlPaths) {
+            [xmlResourceString appendFormat:@"%@%@", xmlResourceString.length == 0 ? @"" : @"\n", path];
+        }
+        NSData *xmlResourceData = [xmlResourceString dataUsingEncoding:NSUTF8StringEncoding];
+        KZHTTPDataResponse *response = [[KZHTTPDataResponse alloc] initWithGeneralData:xmlResourceData];
+        return response;
+    } else {
+        //本地文件
+        return [self localResponseWithPath:path method:method];
+    }
 }
 
 //local

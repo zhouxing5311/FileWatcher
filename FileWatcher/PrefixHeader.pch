@@ -48,4 +48,7 @@
 #define ext_keywordify try {} @catch (...) {}
 #endif
 
+
+#define kXmlResourceKey @"kXmlResourceKey"
+
 #endif /* PrefixHeader_pch */
