@@ -8,7 +8,6 @@
 #import "AppDelegate.h"
 #import "FileWatcherManager.h"
 #import "FileWatcherSocketManager.h"
-#import "FileWatcherUtil.h"
 #import "KZServerManager.h"
 #import "FWAlertUtils.h"
 
@@ -18,13 +17,15 @@
 
 @property (nonatomic, strong) FileWatcherSocketManager *socketManager;
 @property (nonatomic, strong) FileWatcherManager *watcherManager;
+@property (nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *devicesInfo;
+@property (nonatomic, strong) NSMutableArray<NSString *> *devicesArray;
 
 @property (nonatomic, strong) NSStatusItem *statusItem;
+@property (nonatomic, strong) NSMenuItem *watcherItem;//监控目录
 @property (nonatomic, strong) NSMenuItem *connectItem;//连接状态
 @property (nonatomic, strong) NSMenuItem *xmlItem;//xml资源数量
 
 @property (nonatomic, copy) NSString *modulePath;
-@property (nonatomic, strong) NSArray *xmlPaths;//xml资源
 @property (nonatomic, strong) NSArray *connectors;//socket连接者
 
 @end
@@ -33,15 +34,26 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     //当前路径
-    NSString *currentAppPath = [[NSBundle mainBundle] bundlePath];
-    self.modulePath = [currentAppPath stringByDeletingLastPathComponent];
-//    self.modulePath = @"/Users/zhouxing/Desktop/code/boss/bosshi";
+    NSString *modulePath = [[NSUserDefaults standardUserDefaults] objectForKey:kXmlModulePathKey];
+    if (!modulePath.length) {
+        modulePath = [[[NSBundle mainBundle] bundlePath] stringByDeletingLastPathComponent];
+        [[NSUserDefaults standardUserDefaults] setObject:modulePath forKey:kXmlModulePathKey];
+    }
+    self.modulePath = modulePath;
     
     //开启文件服务
     [self setupFileServer];
     
     //设置长连接
     [self setupSocketManager];
+    
+    //设置文件监控
+    [self updateFileInfo];
+}
+
+- (void)updateFileInfo {
+    //菜单更新
+    self.watcherItem.title = _S(@"正在监控%@ >", [self.modulePath lastPathComponent]);
     
     //开始监控文件
     [self setupFileWatcher];
@@ -51,6 +63,8 @@
         //测试
         CFAbsoluteTime startTime = CFAbsoluteTimeGetCurrent();
         self.xmlPaths = [self getAllXMLFilePathInDirectory:self.modulePath];
+        //旧数据清除
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kXmlResourceKey];
         [[NSUserDefaults standardUserDefaults] setObject:self.xmlPaths forKey:kXmlResourceKey];
         CFAbsoluteTime endTime = CFAbsoluteTimeGetCurrent();
         NSLog(@"查找xml完毕，个数：%ld，耗时：%.2f", self.xmlPaths.count, (endTime - startTime) * 1000);
@@ -78,14 +92,15 @@
     FWWeak(self)
     self.socketManager.connectorChangedBlock = ^(NSArray<NSString *> * _Nonnull connectors) {
         FWStrong(self)
+        //更新设备信息
         NSMenu *connectorMenu = [NSMenu new];
         [connectors enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             NSMenuItem *item = [NSMenuItem new];
             item.title = obj;
             [connectorMenu addItem:item];
         }];
-        self.connectItem.submenu = connectorMenu;
         self.connectors = connectors;
+        self.connectItem.submenu = connectorMenu;
         [self updateStatusBarWithIsConnected:connectors.count > 0];
     };
     [self.socketManager startTcpServer];
@@ -116,9 +131,9 @@
     NSMenu *menu = [[NSMenu alloc] init];
     
     //监控状态
-    NSMenuItem *watcherItem = [NSMenuItem new];
-    watcherItem.title = _S(@"正在监控%@", [self.modulePath lastPathComponent]);
+    NSMenuItem *watcherItem = [[NSMenuItem alloc] initWithTitle:@"" action:@selector(showPathSelect) keyEquivalent:@""];
     [menu addItem:watcherItem];
+    self.watcherItem = watcherItem;
     
     //xml资源数量
     [menu addItem:self.xmlItem];
@@ -135,7 +150,7 @@
     
     //链接状态
     NSMenuItem *connectItem = [NSMenuItem new];
-    connectItem.title = @"已连接";
+    connectItem.title = @"无连接";
     connectItem.submenu = [NSMenu new];
     [menu addItem:connectItem];
     self.connectItem = connectItem;
@@ -154,6 +169,8 @@
     NSImage *buttonImage = [NSImage imageNamed:imageName];
     [buttonImage setSize:NSMakeSize(18, 18)];
     button.image = buttonImage;
+    
+    self.connectItem.title = connected ? @"已连接" : @"无连接";
 }
 
 //监听文件变更通知
@@ -204,6 +221,31 @@
     return xmlFilePaths;
 }
 
+//选择module路径
+- (void)showPathSelect {
+    NSOpenPanel *openPanel = [NSOpenPanel openPanel];
+        
+    // 设置面板样式为选择目录
+    [openPanel setCanChooseDirectories:YES];
+    [openPanel setCanChooseFiles:NO];
+    [openPanel setAllowsMultipleSelection:NO];
+    
+    // 显示面板
+    [openPanel beginSheetModalForWindow:NSApp.mainWindow completionHandler:^(NSModalResponse result) {
+        if (result == NSModalResponseOK) {
+            // 获取选择的目录
+            NSURL *selectedURL = [openPanel URL];
+            NSString *modulePath = selectedURL.path;
+            
+            self.modulePath = modulePath;
+            [[NSUserDefaults standardUserDefaults] setObject:self.modulePath forKey:kXmlModulePathKey];
+            
+            //刷新文件信息
+            [self updateFileInfo];
+        }
+    }];
+}
+
 #pragma mark - Get
 - (NSMenuItem *)xmlItem {
     if (!_xmlItem) {
@@ -211,6 +253,20 @@
         _xmlItem.title = @"xml数量0";
     }
     return _xmlItem;
+}
+
+- (NSMutableDictionary<NSString *,NSString *> *)devicesInfo {
+    if (!_devicesInfo) {
+        _devicesInfo = @{}.mutableCopy;
+    }
+    return _devicesInfo;
+}
+
+- (NSMutableArray<NSString *> *)devicesArray {
+    if (!_devicesArray) {
+        _devicesArray = @[].mutableCopy;
+    }
+    return _devicesArray;
 }
 
 #pragma mark - NSApplicationDelegate

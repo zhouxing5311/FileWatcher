@@ -87,11 +87,13 @@
 //更新连接者信息
 - (void)updateConnectorInfo {
     if (self.connectorChangedBlock) {
-        NSMutableArray *pointers = [NSMutableArray array];
+        NSMutableArray *deviceInfos = [NSMutableArray array];
         [self.clientSocketArray enumerateObjectsUsingBlock:^(GCDAsyncSocket * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            [pointers addObject:[NSString stringWithFormat:@"%p", obj]];
+            if (obj.userData) {
+                [deviceInfos addObject:obj.userData];
+            }
         }];
-        self.connectorChangedBlock(pointers);
+        self.connectorChangedBlock(deviceInfos);
     }
 }
 
@@ -100,7 +102,6 @@
 - (void)socket:(GCDAsyncSocket *)sock didAcceptNewSocket:(GCDAsyncSocket *)newSocket {
     NSLog(@"开启新的链接：%@", sock);
     [self.clientSocketArray addObject:newSocket];
-    [self updateConnectorInfo];
     //心跳数据更新
     [self.heartInfo setObject:@(CFAbsoluteTimeGetCurrent()) forKey:pointValue(newSocket)];
     //开始读取数据，timeOut为负值表示没有时间限制，读取数据完毕，执行socket:didReadData:withTag: 这个协议方法
@@ -110,7 +111,9 @@
 //读取数据完成后，执行这个方法
 - (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag {
     NSString *result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-        NSLog(@"客户端传来的字符为：%@",result);
+    NSLog(@"客户端传来的字符为：%@", result);
+    sock.userData = result;
+    [self updateConnectorInfo];
     [sock readDataWithTimeout:-1 tag:tag];
     //心跳数据更新
     double nowTime = CFAbsoluteTimeGetCurrent();

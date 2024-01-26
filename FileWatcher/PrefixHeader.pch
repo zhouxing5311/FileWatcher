@@ -50,5 +50,6 @@
 
 
 #define kXmlResourceKey @"kXmlResourceKey"
+#define kXmlModulePathKey @"kXmlModulePathKey"
 
 #endif /* PrefixHeader_pch */

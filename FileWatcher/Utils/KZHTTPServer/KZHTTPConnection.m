@@ -64,7 +64,7 @@
 
 //local
 - (NSObject<HTTPResponse> *)localResponseWithPath:(NSString *)path method:(NSString *)method {
-    NSString *homeDicPath = [[[NSBundle mainBundle] bundlePath] stringByDeletingLastPathComponent];
+    NSString *homeDicPath = [[NSUserDefaults standardUserDefaults] objectForKey:kXmlModulePathKey];
     homeDicPath = [homeDicPath stringByAppendingPathComponent:path];
     
     BOOL isDic = NO;

@@ -9,6 +9,7 @@
 
 @interface AppDelegate : NSObject <NSApplicationDelegate>
 
+@property (nonatomic, strong) NSArray *xmlPaths;//xml资源
 
 @end
 
